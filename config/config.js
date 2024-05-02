@@ -5,8 +5,8 @@ const config = require("./config.json");
 // const defaultConfig = objectval.config;
 
 const defaultConfig = config.development;
-const environment='development';
-// const environment = "production"
+// const environment='development';
+const environment = "production"
 
 // const environmentConfig = objectval[environment];
 const environmentConfig = config[environment];
