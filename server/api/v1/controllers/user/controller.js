@@ -1,6 +1,6 @@
 import Joi from "joi";
 import apiError from "../../../../helper/apiError";
-import resonseMessage from "../../../../../assets/resonseMessage";
+import responseMessage from "../../../../../assets/responseMessage";
 import response from "../../../../../assets/response";
 import { userServices } from "../../services/user";
 const { createUser, findUser, updateUser } = userServices;
@@ -21,12 +21,12 @@ class userController {
             const { value } = validSchema.validate(req.body);
             const userResponse = await findUser({ user_name: value.user_name });
             if (userResponse) {
-                throw apiError.alreadyExist(resonseMessage.ALREADY_EXIST);
+                throw apiError.alreadyExist(responseMessage.ALREADY_EXIST);
             }
             const hashedPassword = await createHash(value.password);
             value.password = hashedPassword
             const result = await createUser(value);
-            return res.json(new response(result, resonseMessage.USER_SIGNUP));
+            return res.json(new response(result, responseMessage.USER_SIGNUP));
         } catch (error) {
             next(error);
         }
@@ -44,14 +44,14 @@ class userController {
             const { value } = validSchema.validate(req.body);
             const userResult = await findUser({ user_name: value.user_name });
             if (!userResult) {
-                throw apiError.notFound(resonseMessage.USER_NOT_EXIST);
+                throw apiError.notFound(responseMessage.USER_NOT_EXIST);
             }
             const isValidPassword = await compareHash(userResult.password, value.password);
             if (!isValidPassword) {
-                throw apiError.invalid(resonseMessage.INCORRECT_PASSWORD);
+                throw apiError.invalid(responseMessage.INCORRECT_PASSWORD);
             }
             const token = await getToken({ _id: userResult._id, email: userResult.email });
-            return res.json(new response({ userResult, token }, resonseMessage.USER_LOGIN));
+            return res.json(new response({ userResult, token }, responseMessage.USER_LOGIN));
         } catch (error) {
             next(error);
         }
@@ -65,13 +65,13 @@ class userController {
             const { value } = validSchema.validate(req.body);
             const userResult = await findUser({ user_name: value.user_name });
             if (!userResult) {
-                throw apiError.notFound(resonseMessage.USER_NOT_FOUND);
+                throw apiError.notFound(responseMessage.USER_NOT_FOUND);
             }
             const hashedPassword = await  createHash(value.new_password);
 
     
             const result = await updateUser({ _id: userResult._id },{password:hashedPassword});
-            return res.json(new response(result, resonseMessage.PASSWORD_UPDATE));
+            return res.json(new response(result, responseMessage.PASSWORD_UPDATE));
         } catch (error) {
             next(error);
         }

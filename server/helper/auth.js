@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import userModel from "../models/user";
 import apiError from "./apiError";
-import responseMessage from "../../assets/resonseMessage";
+import responseMessage from "../../assets/responseMessage";
 require("../../config/config");
 
 module.exports = {
