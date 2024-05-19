@@ -5,8 +5,7 @@ import * as path from "path";
 import cors from "cors";
 import morgan from "morgan";
 import apiErrorHandler from "../helper/apiErrorHandler";
-
-
+import { reqDeEncrypt } from "../globalFunction";
 
 
 const app = new express();
@@ -30,6 +29,18 @@ class ExpressServer {
                 preflightContinue: false,
             })
         );
+
+        app.use(function (req, res, next) {
+            if (req.body && req.body.data) {
+                try {
+                    const decryptedData = reqDeEncrypt(req.body.data);
+                    req.body = decryptedData; 
+                } catch (error) {
+                    return res.status(400).json({ error: 'Invalid encrypted data' });
+                }
+            }
+            next();
+        });
     }
     router(routes) {
         routes(app)
